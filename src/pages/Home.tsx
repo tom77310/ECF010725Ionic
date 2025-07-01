@@ -1,8 +1,9 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonSpinner, IonTitle, IonToolbar } from '@ionic/react';
 import { useEffect, useState } from 'react';
-
+import './Home.css';
 
 interface Scrutin {
+  id:number;
   title : string;
   start_at : Date;
   ends_at : Date;
@@ -11,7 +12,7 @@ interface Scrutin {
 const Home: React.FC = () => {
 
 const [scrutin, setScrutin] = useState<Scrutin>();
-const [Loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
 
 
 useEffect(()=>{
@@ -20,7 +21,7 @@ useEffect(()=>{
   .then(response => {
       setScrutin(response.data) // recupere les données des scrutins
       console.log(response.data);
-      
+      setLoading(false);
     })
     .catch(error => {
       console.error('Erreur API :', error);
@@ -36,9 +37,30 @@ return (
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-        </IonHeader>
-        <h1>{scrutin?.title}</h1>
+        {loading ? (
+          <IonSpinner name="crescent" />
+        ) : scrutin.length === 0 ? (
+          <p>Aucun scrutin disponible.</p>
+        ): (
+          <table>
+            <thead>
+              <tr>
+                <th>Titre</th>
+                <th>Date de début</th>
+                <th>Date de Fin</th>
+              </tr>
+            </thead>
+            <tbody>
+               {scrutin.map(scrutin =>
+                 <tr key={scrutin.id}>
+                <th>{scrutin.title}</th>
+                <th>{new Date(scrutin.starts_at).toLocaleString('fr-FR')}</th>
+                <th>{new Date(scrutin.ends_at).toLocaleString('fr-FR')}</th>
+              </tr>
+               )}
+            </tbody>
+          </table>
+        )}
       </IonContent>
     </IonPage>
   );
