@@ -1,5 +1,6 @@
-import { IonContent, IonHeader, IonPage, IonSpinner, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonContent, IonHeader, IonPage, IonSpinner, IonTitle, IonToolbar } from '@ionic/react';
 import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import './Home.css';
 
 interface Scrutin {
@@ -13,6 +14,10 @@ const Home: React.FC = () => {
 
 const [scrutin, setScrutin] = useState<Scrutin>();
 const [loading, setLoading] = useState(true);
+const history = useHistory();
+const handleVoir = (id:number) => {
+  history.push('/api/v1/scrutins/${id}/members');
+};
 
 
 useEffect(()=>{
@@ -29,6 +34,8 @@ useEffect(()=>{
     });
 }, [])
 
+
+
 return (
     <IonPage>
       <IonHeader>
@@ -39,9 +46,9 @@ return (
       <IonContent fullscreen>
         {loading ? (
           <IonSpinner name="crescent" />
-        ) : scrutin.length === 0 ? (
-          <p>Aucun scrutin disponible.</p>
-        ): (
+        ) : scrutin.length === 0 ? ( // si il n'y a pas de donnée
+          <p>Aucun scrutin disponible.</p> // alors affiche le message "aucun scrutins disponibles"
+        ): ( // sinon il affiche le tableau avec les données
           <table>
             <thead>
               <tr>
@@ -51,11 +58,16 @@ return (
               </tr>
             </thead>
             <tbody>
-               {scrutin.map(scrutin =>
+               {scrutin.map(scrutin => // boucle pour recuperer chaque données
                  <tr key={scrutin.id}>
                 <th>{scrutin.title}</th>
                 <th>{new Date(scrutin.starts_at).toLocaleString('fr-FR')}</th>
                 <th>{new Date(scrutin.ends_at).toLocaleString('fr-FR')}</th>
+                <th>
+                  <IonButton size="small" onClick={()=> handleVoir(scrutin.id)} > 
+                    Voir
+                  </IonButton>
+                </th>
               </tr>
                )}
             </tbody>
