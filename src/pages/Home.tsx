@@ -6,17 +6,18 @@ import './Home.css';
 interface Scrutin {
   id:number;
   title : string;
-  start_at : Date;
+  starts_at : Date;
   ends_at : Date;
 }
 
 const Home: React.FC = () => {
 
-const [scrutin, setScrutin] = useState<Scrutin>();
+const [scrutin, setScrutin] = useState<Scrutin[]>([]);
 const [loading, setLoading] = useState(true);
+
 const history = useHistory();
 const handleVoir = (id:number) => {
-  history.push('/api/v1/scrutins/${id}/members');
+  history.push(`/api/v1/scrutins/${id}/members`);
 };
 
 

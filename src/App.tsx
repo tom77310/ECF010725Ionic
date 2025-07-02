@@ -41,7 +41,7 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonRouterOutlet>
          <Route exact path="/scrutins" component={Home} />
-        <Route exact path="/scrutins/:id/members" component={ScrutinMembers} />
+        <Route exact path="/api/v1/scrutins/:id/members" component={ScrutinMembers} />
         <Redirect exact from="/" to="/scrutins" />
       </IonRouterOutlet>
     </IonReactRouter>
