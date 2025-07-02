@@ -12,5 +12,4 @@ Voici les étapes réalisées :
 => ajout d'une page pour afficher les statistiques des votes
 => ajout d'une page pour afficher le tableau pour les membres de chaque scrutins
 => ajout du style pour les tableaux 
-=> ajout des routes 
-=> 
+=> ajout des routes
