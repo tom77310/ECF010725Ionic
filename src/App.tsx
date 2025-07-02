@@ -41,9 +41,14 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
-         <Route exact path="/scrutins" component={Home} />
-        <Route exact path="/api/v1/scrutins/:id/members" component={ScrutinMembers} />
+        {/** redirection vers le tableau avec les scrutins */}
+         <Route exact path="/scrutins" component={Home} /> 
         <Redirect exact from="/" to="/scrutins" />
+
+        {/** redirection vers le tableau avec les membres depuis le tableau des scrutins */}
+        <Route exact path="/api/v1/scrutins/:id/members" component={ScrutinMembers} />
+
+        {/** redirection vers la pages des statistiques depuis le tableau des scrutins */}
         <Route exact path="/stats/:id" component={ScrutinStats} />
       </IonRouterOutlet>
     </IonReactRouter>

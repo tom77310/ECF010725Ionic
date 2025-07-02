@@ -17,16 +17,16 @@ interface Stats {
 }
 
 const ScrutinStats: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const history = useHistory();
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { id } = useParams<{ id: string }>(); // permet de recuperer l'id dans l'url
+  const history = useHistory(); // pour changer de page
+  const [stats, setStats] = useState<Stats | null>(null); // stocke les données des statistiques de l'api
+  const [loading, setLoading] = useState(true); // permet de charger les données
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/scrutins/${id}/stats`)
+    fetch(`http://localhost:3000/api/v1/scrutins/${id}/stats`) // connection a l'api pour recuperer les données
       .then(res => res.json())
       .then(response => {
-        setStats(response.data);
+        setStats(response.data); // recuperation des données
         setLoading(false);
       })
       .catch(error => {
@@ -53,6 +53,7 @@ const ScrutinStats: React.FC = () => {
         ) : (
           <p>Aucune statistique disponible.</p>
         )}
+        {/** history.goBack => boutton pour revenir a la page precedente */}
         <IonButton expand="block" color="medium" onClick={() => history.goBack()}>
           Retour
         </IonButton>
