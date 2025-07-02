@@ -78,6 +78,7 @@ const ScrutinMembers: React.FC = () => {
                       </IonButton>
                     )}
                   </td>
+                  
                 </tr>
               ))}
             </tbody>

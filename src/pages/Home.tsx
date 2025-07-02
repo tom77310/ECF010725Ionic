@@ -56,6 +56,7 @@ return (
                 <th>Titre</th>
                 <th>Date de début</th>
                 <th>Date de Fin</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -67,6 +68,9 @@ return (
                 <th>
                   <IonButton size="small" onClick={()=> handleVoir(scrutin.id)} > 
                     Voir
+                  </IonButton>
+                  <IonButton size="small" color= "secondary" routerLink= {`/stats/${scrutin.id}`} > 
+                    Voir les statistiques du scrutin
                   </IonButton>
                 </th>
               </tr>
