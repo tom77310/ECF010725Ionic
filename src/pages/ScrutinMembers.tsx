@@ -1,5 +1,7 @@
 import {
-  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel,
+  IonSpinner,
+  IonButton
 } from '@ionic/react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -16,12 +18,17 @@ const ScrutinMembers: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
+  const [votedIds, setVotedIds] = useState<number[]>([]); // ids des membres qui ont voté
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/v1/scrutins/${id}/members`)
       .then(res => res.json())
       .then(response => {
         setMembers(response.data);
+        const alreadyVoted = response.data
+          .filter((m: Member) => m.has_voted === 1)
+          .map((m: Member) => m.id);
+        setVotedIds(alreadyVoted);
         setLoading(false);
       })
       .catch(error => {
@@ -30,28 +37,51 @@ const ScrutinMembers: React.FC = () => {
       });
   }, [id]);
 
+   const handleVote = (id: number) => {
+    setVotedIds(prev => [...prev, id]);
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Membres du scrutin {id}</IonTitle>
+          <IonTitle>Membres</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
         {loading ? (
-          <p>Chargement...</p>
+          <IonSpinner name="crescent" />
         ) : members.length === 0 ? (
           <p>Aucun membre trouvé.</p>
         ) : (
-          <IonList>
-            {members.map(member => (
-              <IonItem key={member.id}>
-                <IonLabel>
-                  {member.first_name} {member.last_name} — Né(e) le {member.birth_date} — {member.has_voted ? "A voté" : "N'a pas voté"}
-                </IonLabel>
-              </IonItem>
-            ))}
-          </IonList>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={{ border: '1px solid #ccc', padding: '8px' }}>Prénom</th>
+                <th style={{ border: '1px solid #ccc', padding: '8px' }}>Nom</th>
+                <th style={{ border: '1px solid #ccc', padding: '8px' }}>Date de naissance</th>
+                <th style={{ border: '1px solid #ccc', padding: '8px' }}>Vote</th>
+              </tr>
+            </thead>
+            <tbody>
+              {members.map(member => (
+                <tr key={member.id}>
+                  <td style={{ border: '1px solid #ccc', padding: '8px' }}>{member.first_name}</td>
+                  <td style={{ border: '1px solid #ccc', padding: '8px' }}>{member.last_name}</td>
+                  <td style={{ border: '1px solid #ccc', padding: '8px' }}>{member.birth_date}</td>
+                  <td style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'center' }}>
+                    {votedIds.includes(member.id) ? (
+                      <span>A voté</span>
+                    ) : (
+                      <IonButton size="small" onClick={() => handleVote(member.id)}>
+                        Voter
+                      </IonButton>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </IonContent>
     </IonPage>
